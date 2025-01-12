@@ -1,0 +1,30 @@
+<!-- Weather/templates/weather.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+</head>
+<body>
+    <h1>Weather App</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="city">Enter City:</label>
+        <input type="text" name="city" required>
+        <button type="submit">Get Weather</button>
+    </form>
+    
+    {% if weather_data %}
+        <h2>Weather in {{ weather_data.city }}</h2>
+        <p>Temperature: {{ weather_data.temperature }}°C</p>
+        <p>Pressure: {{ weather_data.pressure }} hPa</p>
+        <p>Humidity: {{ weather_data.humidity }}%</p>
+        <p>Description: {{ weather_data.description }}</p>
+    {% elif error_message %}
+        <p>{{ error_message }}</p>
+    {% endif %}
+    
+</body>
+</html>

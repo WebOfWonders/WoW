@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD5 Hash Converter</title>
+</head>
+<body>
+    <h1>MD5 Hash Converter</h1>
+
+    <!-- Section to Generate MD5 Hash -->
+    <form method="post">
+        {% csrf_token %}
+        <h2>Generate MD5 Hash</h2>
+        <label for="text">Enter Text:</label>
+        <input type="text" id="text" name="text">
+        <button type="submit" name="generate_hash">Generate MD5 Hash</button>
+    </form>
+
+    {% if hash_value %}
+        <p><strong>Generated MD5 Hash:</strong> {{ hash_value }}</p>
+    {% endif %}
+
+    <hr>
+
+    <!-- Section to Reverse MD5 to Original String -->
+    <form method="post">
+        {% csrf_token %}
+        <h2>Find Original String from MD5 Hash</h2>
+        <label for="md5">Enter MD5 Hash:</label>
+        <input type="text" id="md5" name="md5">
+        <button type="submit" name="get_original">Find Original String</button>
+    </form>
+
+    {% if original_string %}
+        <p><strong>Original String:</strong> {{ original_string }}</p>
+    {% endif %}
+</body>
+</html>

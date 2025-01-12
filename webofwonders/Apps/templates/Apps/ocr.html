@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Generator</title>
+</head>
+<body>
+
+<h1>OCR Text Extractor</h1>
+
+<!-- Form to upload the image -->
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="image" accept="image/*" required>
+    <button type="submit">Upload Image</button>
+</form>
+
+{% if file_url %}
+    <h3>Uploaded Image</h3>
+    <img src="{{ file_url }}" alt="Uploaded Image" width="300">
+{% endif %}
+
+<h2>Extracted Text</h2>
+
+{% if extracted_text %}
+    <pre>{{ extracted_text }}</pre> <!-- Use 'pre' tag to maintain formatting -->
+{% else %}
+    <p>No extracted text available.</p>
+{% endif %}
+
+
+
+
+</body>
+</html>

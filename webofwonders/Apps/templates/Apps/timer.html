@@ -1,0 +1,228 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+</head>
+<body>
+    <h1>Set Timer</h1>
+    
+    <label for="hours">Hours:</label>
+    <select id="hours">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+    <br>
+
+    <label for="minutes">Minutes:</label>
+    <select id="minutes">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+    </select>
+    <br>
+
+    <label for="seconds">Seconds:</label>
+    <select id="seconds">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+    </select>
+    <br>
+
+    <button id="start-timer">Start Timer</button>
+
+    <h2 id="time-display">00:00:00</h2>
+
+    <script>
+        // Timer function
+        function startTimer(hours, minutes, seconds) {
+            let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+            const display = document.getElementById("time-display");
+
+            let timerInterval = setInterval(function () {
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    playSound();
+                } else {
+                    totalSeconds--;
+                    let hrs = Math.floor(totalSeconds / 3600);
+                    let mins = Math.floor((totalSeconds % 3600) / 60);
+                    let secs = totalSeconds % 60;
+
+                    // Update the display with the remaining time
+                    display.textContent = `${formatTime(hrs)}:${formatTime(mins)}:${formatTime(secs)}`;
+                }
+            }, 1000);
+        }
+
+        // Function to format time with leading zero if needed
+        function formatTime(time) {
+            return time < 10 ? '0' + time : time;
+        }
+
+        // Play sound when the timer ends
+        function playSound() {
+            const audio = new Audio('/static/audio/timer.mp3'); // Path to your audio file
+            audio.play();
+        }
+
+        // Button click handler
+        document.getElementById('start-timer').addEventListener('click', function () {
+            const hours = parseInt(document.getElementById('hours').value) || 0;
+            const minutes = parseInt(document.getElementById('minutes').value) || 0;
+            const seconds = parseInt(document.getElementById('seconds').value) || 0;
+            startTimer(hours, minutes, seconds);
+        });
+    </script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+    <style>
+        /* Style your timer here */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+       
+        h1, h2 {
+            margin-top: 20px;
+        }
+        label, select {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        button {
+            font-size: 16px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        #time-display {
+            font-size: 32px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Set Timer</h1>
+    
+    <!-- Timer input fields using select -->
+    <label for="hours">Hours:</label>
+    <select id="hours">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+    <br>
+
+    <label for="minutes">Minutes:</label>
+    <select id="minutes">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+    </select>
+    <br>
+
+    <label for="seconds">Seconds:</label>
+    <select id="seconds">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+    </select>
+    <br>
+
+    <button id="start-timer">Start Timer</button>
+
+    <h2 id="time-display">00:00:00</h2>
+
+    <script>
+        // Timer function
+        function startTimer(hours, minutes, seconds) {
+            let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+            const display = document.getElementById("time-display");
+
+            let timerInterval = setInterval(function () {
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    playSound();  // Play sound immediately when time is over
+                } else {
+                    totalSeconds--;
+                    let hrs = Math.floor(totalSeconds / 3600);
+                    let mins = Math.floor((totalSeconds % 3600) / 60);
+                    let secs = totalSeconds % 60;
+
+                    // Update the display with the remaining time
+                    display.textContent = `${formatTime(hrs)}:${formatTime(mins)}:${formatTime(secs)}`;
+                }
+            }, 1000);
+        }
+
+        // Function to format time with leading zero if needed
+        function formatTime(time) {
+            return time < 10 ? '0' + time : time;
+        }
+
+        // Play sound when the timer ends
+        function playSound() {
+            const audio = new Audio('static/audio/timer.mp3'); // Use relative path if needed
+            audio.play();
+        }
+
+        // Button click handler
+        document.getElementById('start-timer').addEventListener('click', function () {
+            const hours = parseInt(document.getElementById('hours').value) || 0;
+            const minutes = parseInt(document.getElementById('minutes').value) || 0;
+            const seconds = parseInt(document.getElementById('seconds').value) || 0;
+            startTimer(hours, minutes, seconds);
+        });
+    </script>
+</body>
+</html>
+

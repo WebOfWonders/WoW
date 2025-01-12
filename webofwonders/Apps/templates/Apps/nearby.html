@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearby Places</title>
+</head>
+<body>
+    <h1>Nearby Places</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="city">City Name:</label>
+        <input type="text" name="city" id="city" required>
+        <label for="place">Place Name:</label>
+        <input type="text" name="place" id="place" required>
+       
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if places %}
+    <h3>Nearby places:</h3>
+    <ul>
+        {% for place in places %}
+            <li>
+                <strong>{{ place.name }}</strong><br>
+                Address: {{ place.address }}<br>
+                <a href="{{ place.google_map_link }}" target="_blank">View on Google Maps</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>{{ error_message }}</p>
+{% endif %}
+
+  
+
+</body>
+</html>

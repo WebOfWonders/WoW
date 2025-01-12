@@ -1,0 +1,554 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Time - {{ country_name }}</title>
+</head>
+<body>
+    <h1>Time in {{ country_name }}</h1>
+    <p><strong>Digital Time:</strong> {{ digital_time }}</p>
+    <p><strong>Analog Time:</strong> {{ analog_time }}</p>
+    <p><strong>Country Time (in {{ country_name }}'s timezone):</strong> {{ country_time }}</p>
+
+</body>
+</html> -->
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Time</title>
+    <style>
+        .time {
+            font-size: 2rem;
+        }
+        .analog-clock {
+            font-family: 'Arial', sans-serif;
+            font-size: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Time in {{ country_name }}</h1>
+
+    <div>
+        <h2>Digital Time: <span id="digital-time">{{ digital_time }}</span></h2>
+        <h2>Analog Time: <span id="analog-time">{{ analog_time }}</span></h2>
+    </div>
+
+    <div>
+        <h3>Country Time (in {{ country_name }}'s timezone): <span id="country-time">{{ country_time }}</span></h3>
+    </div>
+
+    <script>
+        // Get the timezone from Django context
+        const timezone = "{{ timezone }}";
+
+        // Function to update the digital and analog clock
+        function updateClock() {
+            const digitalTimeElement = document.getElementById('digital-time');
+            const analogTimeElement = document.getElementById('analog-time');
+            const countryTimeElement = document.getElementById('country-time');
+            
+            // Get the current date and time from the server's timezone (using the correct timezone)
+            const now = new Date().toLocaleString("en-US", { timeZone: timezone });
+
+            // Format the digital time (HH:MM:SS)
+            const digitalTime = new Date(now).toLocaleTimeString();
+
+            // Format the analog time (HH:MM:SS AM/PM)
+            const analogTime = new Date(now).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+
+            // Update the HTML with the new times
+            digitalTimeElement.textContent = digitalTime;
+            analogTimeElement.textContent = analogTime;
+            countryTimeElement.textContent = digitalTime; // Display the same time format for country time as well
+        }
+
+        // Update the clock every 1000ms (1 second)
+        setInterval(updateClock, 1000);
+
+        // Initialize the clock immediately when the page loads
+        updateClock();
+    </script>
+</body>
+</html> -->
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Time - {{ country_name }}</title>
+    <style>
+        /* General page styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #4CAF50;
+        }
+
+        h2, h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .time {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .clock-container {
+            display: flex;
+            gap: 50px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .digital-clock {
+            background-color: #333;
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            font-size: 2rem;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .analog-clock {
+            width: 200px;
+            height: 200px;
+            background-color: #fff;
+            border-radius: 50%;
+            border: 5px solid #333;
+            position: relative;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .analog-clock .clock-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hour-hand, .minute-hand, .second-hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: 50% 100%;
+            transform: translateX(-50%) translateY(0);
+            transition: transform 0.05s linear;
+        }
+
+        .hour-hand {
+            width: 6px;
+            height: 50px;
+            background-color: #000;
+        }
+
+        .minute-hand {
+            width: 4px;
+            height: 70px;
+            background-color: #555;
+        }
+
+        .second-hand {
+            width: 2px;
+            height: 90px;
+            background-color: red;
+        }
+
+        .analog-clock::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: black;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .country-time {
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Time in {{ country_name }}</h1>
+
+    <div class="clock-container">
+        <div class="digital-clock">
+            <h2>Digital Time</h2>
+            <span id="digital-time" class="time">{{ digital_time }}</span>
+        </div>
+
+
+
+        <div class="analog-clock">
+            <div class="clock-face">
+                <div class="hour-hand" id="hour-hand"></div>
+                <div class="minute-hand" id="minute-hand"></div>
+                <div class="second-hand" id="second-hand"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="country-time">
+        <h3>Country Time (in {{ country_name }}'s timezone):</h3>
+        <span id="country-time" class="time">{{ country_time }}</span>
+    </div>
+
+    <script>
+        // Get the timezone from Django context
+        const timezone = "{{ timezone }}";
+
+        // Function to update the digital and analog clock
+        function updateClock() {
+            const digitalTimeElement = document.getElementById('digital-time');
+            const countryTimeElement = document.getElementById('country-time');
+            
+            // Get the current date and time from the server's timezone (using the correct timezone)
+            const now = new Date().toLocaleString("en-US", { timeZone: timezone });
+
+            // Format the digital time (HH:MM:SS)
+            const digitalTime = new Date(now).toLocaleTimeString();
+
+            // Format the analog time (HH:MM:SS AM/PM)
+            const analogTime = new Date(now).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+
+            // Update the HTML with the new times
+            digitalTimeElement.textContent = digitalTime;
+            countryTimeElement.textContent = digitalTime; // Display the same time format for country time as well
+
+            // Analog Clock Rotation
+            const hours = new Date(now).getHours();
+            const minutes = new Date(now).getMinutes();
+            const seconds = new Date(now).getSeconds();
+
+            const hourDegree = (hours % 12) * 30 + (minutes / 2); // 360 / 12 = 30
+            const minuteDegree = minutes * 6; // 360 / 60 = 6
+            const secondDegree = seconds * 6; // 360 / 60 = 6
+
+            // Update analog clock hands
+            document.getElementById('hour-hand').style.transform = `translateX(-50%) translateY(0) rotate(${hourDegree}deg)`;
+            document.getElementById('minute-hand').style.transform = `translateX(-50%) translateY(0) rotate(${minuteDegree}deg)`;
+            document.getElementById('second-hand').style.transform = `translateX(-50%) translateY(0) rotate(${secondDegree}deg)`;
+        }
+
+        // Update the clock every 1000ms (1 second)
+        setInterval(updateClock, 1000);
+
+        // Initialize the clock immediately when the page loads
+        updateClock();
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Time - {{ country_name }}</title>
+    <style>
+        /* General page styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #4CAF50;
+        }
+
+        h2, h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .time {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .clock-container {
+            display: flex;
+            gap: 50px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .digital-clock {
+            background-color: #333;
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            font-size: 2rem;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* .analog-clock {
+    width: 200px;
+    height: 200px;
+    background-color: #fff;
+    border-radius: 100%;
+    border: 5px solid #333;
+    position: relative;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.webofwonders-text {
+    position: absolute;
+    top: 60%;
+    left: 53%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+        .analog-clock .clock-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hour-hand, .minute-hand, .second-hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: 50% 100%;
+            transform: translateX(-50%) translateY(0);
+            transition: transform 0.05s linear;
+        }
+
+        .hour-hand {
+            width: 6px;
+            height: 50px;
+            background-color: #000;
+        }
+
+        .minute-hand {
+            width: 4px;
+            height: 70px;
+            background-color: #555;
+        }
+
+        .second-hand {
+            width: 2px;
+            height: 90px;
+            background-color: red;
+        } */
+        .analog-clock {
+    width: 250px;
+    height: 250px;
+    position: relative;
+    /* box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); */
+    background-image: url('https://www.clipartmax.com/png/middle/357-3576197_never-miss-a-moment-wall-clock-without-hands.png'); /* Replace with your image URL */
+    background-size: cover;
+    background-position: center;
+    border-radius: 100%;
+}
+
+.clock-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.webofwonders-text {
+    position: absolute;
+    top: 60%;
+    left: 53%;
+    transform: translate(-50%, -50%);
+    font-size: 13px;
+    font-weight: bold;
+    color: #333;
+    z-index: 5678;
+}
+
+.hour-hand, .minute-hand, .second-hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: 50% 100%;
+    transform: translateX(-50%) translateY(0);
+    transition: transform 0.05s linear;
+}
+
+.hour-hand {
+    width: 6px;
+    height: 50px;
+    background-color: #000;
+}
+
+.minute-hand {
+    width: 4px;
+    height: 70px;
+    background-color: #555;
+}
+
+.second-hand {
+    width: 2px;
+    height: 90px;
+    background-color: red;
+}
+
+
+        /* .analog-clock::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: black;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .country-time {
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+
+        .analog-clock .numbers {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 100%;
+            height: 100%;
+        }
+
+        .analog-clock .numbers span {
+            position: absolute;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        } */
+/* 
+        .analog-clock .numbers span:nth-child(1) { top: 13%; left: 75%; transform: translateX(-50%); }
+        .analog-clock .numbers span:nth-child(2) { top: 27%; left: 90%; transform: translateX(-50%); }
+        .analog-clock .numbers span:nth-child(3) { top: 50%; left: 90%; transform: translateY(-50%); }
+        .analog-clock .numbers span:nth-child(4) { bottom: 24%; left: 90%; transform: translateX(-50%); }
+        .analog-clock .numbers span:nth-child(5) { bottom: 10%; left:80%; transform: translateX(-50%); }
+        .analog-clock .numbers span:nth-child(6) { bottom: 3%; left: 55%; transform: translateX(-50%); }
+        .analog-clock .numbers span:nth-child(7) { top: 87%; left: 30%; transform: translateY(-50%); }
+        .analog-clock .numbers span:nth-child(8) { top: 70%; left: 15%; transform: translateX(-50%); }
+        .analog-clock .numbers span:nth-child(9) { top: 47%; left: 10%; transform: translateX(-50%); }
+        .analog-clock .numbers span:nth-child(10) { top: 30%; left: 15%; transform: translateX(-50%); }
+        .analog-clock .numbers span:nth-child(11) { top: 20%; left: 15%; transform: translateY(-50%); }
+        .analog-clock .numbers span:nth-child(12) { top: 10%; left: 50%; transform: translateX(-50%); } */
+    </style>
+</head>
+<body>
+    <h1>Time in {{ country_name }}</h1>
+
+    <div class="clock-container">
+        <!-- Digital Time Display (12-hour and 24-hour) -->
+        <div class="digital-clock">
+            <h2>Digital Time</h2>
+            <span id="digital-time-12" class="time">{{ digital_time_12 }}</span><br>
+            <span id="digital-time-24" class="time">{{ digital_time_24 }}</span>
+        </div>
+
+        <!-- Analog Clock Display -->
+        <div class="analog-clock">
+            <div class="clock-face">
+                <div class="webofwonders-text">WebOfWonders</div>
+                <div class="hour-hand" id="hour-hand"></div>
+                <div class="minute-hand" id="minute-hand"></div>
+                <div class="second-hand" id="second-hand"></div>
+            </div>
+        </div>
+        
+
+    <div class="country-time">
+        <h3>Country Time (in {{ country_name }}'s timezone):</h3>
+        <span id="country-time" class="time">{{ country_time }}</span>
+    </div>
+
+    <script>
+        // Get the timezone from Django context
+        const timezone = "{{ timezone }}";
+
+        // Function to update the digital and analog clock
+        function updateClock() {
+            const digitalTime12Element = document.getElementById('digital-time-12');
+            const digitalTime24Element = document.getElementById('digital-time-24');
+            const countryTimeElement = document.getElementById('country-time');
+            
+            // Get the current date and time from the server's timezone (using the correct timezone)
+            const now = new Date().toLocaleString("en-US", { timeZone: timezone });
+
+            // Format the digital time (12-hour format with AM/PM)
+            const digitalTime12 = new Date(now).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+
+            // Format the digital time (24-hour format)
+            const digitalTime24 = new Date(now).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+
+            // Format the analog time (HH:MM:SS AM/PM)
+            const analogTime = new Date(now).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+
+            // Update the HTML with the new times
+            digitalTime12Element.textContent = digitalTime12;
+            digitalTime24Element.textContent = digitalTime24;
+            countryTimeElement.textContent = digitalTime24;
+
+            // Analog Clock Rotation
+            const hours = new Date(now).getHours();
+            const minutes = new Date(now).getMinutes();
+            const seconds = new Date(now).getSeconds();
+
+            const hourDegree = (hours % 12) * 30 + (minutes / 2); // 360 / 12 = 30
+            const minuteDegree = minutes * 6; // 360 / 60 = 6
+            const secondDegree = seconds * 6; // 360 / 60 = 6
+
+            // Update analog clock hands
+            document.getElementById('hour-hand').style.transform = `translateX(-50%) translateY(0) rotate(${hourDegree}deg)`;
+            document.getElementById('minute-hand').style.transform = `translateX(-50%) translateY(0) rotate(${minuteDegree}deg)`;
+            document.getElementById('second-hand').style.transform = `translateX(-50%) translateY(0) rotate(${secondDegree}deg)`;
+        }
+
+        // Update the clock every 1000ms (1 second)
+        setInterval(updateClock, 1000);
+
+        // Initialize the clock immediately when the page loads
+        updateClock();
+    </script>
+</body>
+</html>

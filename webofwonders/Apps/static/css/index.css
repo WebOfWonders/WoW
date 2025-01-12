@@ -1,0 +1,107 @@
+/* General Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #020e33;  /* Dark background */
+    color: white;             /* Light text */
+    margin: 0;
+    padding: 0;
+}
+
+/* Top Navigation Bar */
+.navbar {
+    background-color:#020e33;  /* Dark gray */
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.navbar-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.navbar-menu li {
+    margin-left: 20px;
+}
+
+.navbar-menu li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px;
+}
+
+.navbar-menu li a:hover {
+    background-color: #020e33;
+    border-radius: 4px;
+}
+
+/* Welcome Section */
+.container {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 36px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.header p {
+    font-size: 18px;
+    color: #aaa;
+}
+
+.animation {
+    margin-top: 30px;
+}
+
+.animated-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff5733;  /* Bright accent color */
+    animation: fadeIn 3s ease-in-out infinite;
+}
+
+/* Keyframe for animation effect */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+}

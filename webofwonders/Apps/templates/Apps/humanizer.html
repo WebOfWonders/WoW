@@ -1,0 +1,51 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>AI to Human Text Converter</title>
+</head>
+<body>
+    <h1>Convert AI Text to Human-Like Text</h1>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <textarea name="input_text" rows="6" cols="60" placeholder="Enter AI-generated text"></textarea><br>
+        <button type="submit">Convert</button>
+    </form>
+    {% if original_text and humanized_text %}
+        <h2>Original AI Text:</h2>
+        <p>{{ original_text }}</p>
+        <h2>Human-Like Text:</h2>
+        <p>{{ humanized_text }}</p>
+    {% endif %}
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Humanize Text</title>
+</head>
+<body>
+    <h1>Humanize AI-Generated Text</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="input_text">Enter Text:</label>
+        <textarea id="input_text" name="input_text" rows="5" cols="50">{{ original_text }}</textarea><br><br>
+        <button type="submit">Humanize</button>
+    </form>
+
+    {% if original_text %}
+    <h2>Original Text:</h2>
+    <p>{{ original_text }}</p>
+
+    <h2>Humanized Text:</h2>
+    <p>{{ humanized_text }}</p>
+    {% endif %}
+</body>
+</html>
