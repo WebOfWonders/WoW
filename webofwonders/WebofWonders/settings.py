@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-6e3)js5!g(5)iwzgy&8g@951)qt)ieyh2=cjga%*lc(i#m71y_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Apps',
+    
 ]
 
 MIDDLEWARE = [
@@ -79,9 +80,13 @@ WSGI_APPLICATION = 'WebofWonders.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'djongo',
+        'NAME': 'webofwonders',  # Your MongoDB database name
+        'CLIENT': {
+            'host': 'localhost',
+            'port': 27017,
+        },
+    },
 }
 
 
@@ -121,8 +126,19 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 APPEND_SLASH = False
+
+
+# settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'webofwonders22@gmail.com'  # Replace with your email
+EMAIL_HOST_PASSWORD = 'djms iwmw ulhh tgxs'  # Replace with your email password
+

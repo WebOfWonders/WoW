@@ -3,6 +3,10 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('register/',views.register,name='register'),
+    path('otp/', views.otp_verify, name='otp_verify'),
+    path('dashboard/',views.dashboard,name='dashboard'),
+    path('login/',views.login,name='login'),
     path('weather/', views.weather, name='weather'),
     path('ocr/', views.ocr, name='ocr'),
     path('md5/', views.md5, name='md5'),

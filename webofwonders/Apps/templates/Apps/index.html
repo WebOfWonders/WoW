@@ -3,46 +3,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web of Wonders</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web of Wonders</title>
 
-    <!-- Correct favicon link -->
-    <link rel="icon" href="{% static 'images/logo.png' %}" type="image/png">
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'images/logo.png' %}" type="image/png">
 
-    <!-- External CSS and JS -->
-    <link rel="stylesheet" href="{% static 'css/index.css' %}">
-    <script src="{% static 'js/index.js' %}" defer></script>
+    <!-- External CSS and JS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/index.js' %}" defer></script>
 </head>
 <body>
 
-    <!-- Top Navigation Bar -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="#" class="navbar-brand">
-                <img id="logo" src="{% static 'images/logo.png' %}" alt="Logo">
-                Web of Wonders
-            </a>
-            <ul class="navbar-menu">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#projects">Explore</a></li>
-                <li><a href="#developers">Developers</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="#" class="navbar-brand">
+                <img id="logo" src="{% static 'images/logo.png' %}" alt="Logo">
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#projects">Explore</a></li>
+                <li><a href="#developers">Developers</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
 
-    <!-- Welcome Section -->
-    <div class="container">
-        <div class="header">
-            <h1>Welcome to Web of Wonders</h1>
-            <p>Explore amazing tools and applications!</p>
-        </div>
-        <div class="animation">
-            <p class="animated-text">This is a fun animation effect!</p>
-        </div>
-    </div>
+    <!-- Welcome Section -->
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to Web of Wonders</h1>
+            <p>Explore amazing tools and applications!</p>
+            <a href="{% url 'register' %}"><button id="reg-btn">Register</button></a>
+            <a href="{% url 'login' %}"><button id="log-btn">Login</button></a>
+        </div>
+    </div>
 
 </body>
 </html>

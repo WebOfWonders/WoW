@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>Verify OTP</h1>
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li style="color: red;">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <label for="otp">Enter OTP:</label>
+        <input type="text" name="otp" id="otp" required>
+        <button type="submit">Verify OTP</button>
+    </form>
+</body>
+</html>
