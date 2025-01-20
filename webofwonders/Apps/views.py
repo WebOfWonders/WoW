@@ -21,109 +21,13 @@ from pymongo import MongoClient
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.conf import settings
-import random
+import  random 
 from django.core.mail import EmailMessage
 
-from pymongo import MongoClient
-from django.core.mail import EmailMessage
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.hashers import make_password
-import random
 
-# Connect to MongoDB
-client = MongoClient('localhost', 27017)  # Update if MongoDB is hosted elsewhere
-db = client['webofwonders']  # Replace with your database name
-user_collection = db['User']  # Replace with your user collection name
 
-otp_storage = {}  # Temporary OTP storage
 
-def register(request):
-    if request.method == "POST":
-        email = request.POST.get('email')
-        password = request.POST.get('password')
 
-        # Check if the email already exists in the database
-        existing_user = user_collection.find_one({"email": email})
-        if existing_user:
-            messages.error(request, "This email is already registered.")
-            return render(request, 'Apps/register.html')  # Redirect back to registration page
-
-        # Generate a 6-digit OTP
-        otp = random.randint(100000, 999999)
-        otp_storage[email] = otp  # Temporarily store OTP for verification
-
-        # HTML email content
-        email_subject = "WebOfWonders - Your OTP Code"
-        email_body = f"""
-        <!DOCTYPE html>
-        <html>
-        <body>
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; padding: 20px; background-color: #f9f9f9;">
-                <h2 style="text-align: center; color: #007bff;">WebOfWonders OTP Verification</h2>
-                <p>Dear User,</p>
-                <p>Thank you for registering with us. Please use the following OTP to verify your email address:</p>
-                <h3 style="text-align: center; color: #007bff; font-size: 28px;">{otp}</h3>
-                <p>This OTP is valid for 10 minutes. Do not share it with anyone.</p>
-                <p>Regards,</p>
-                <p>WebOfWonders Team</p>
-            </div>
-            <p>&copy; webofwonders 2025</p>
-        </body>
-        </html>
-        """
-
-        # Send email with OTP
-        try:
-            email_message = EmailMessage(
-                subject=email_subject,
-                body=email_body,
-                from_email=settings.EMAIL_HOST_USER,
-                to=[email],
-            )
-            email_message.content_subtype = "html"  # Use HTML content type
-            email_message.send(fail_silently=False)
-        except Exception as e:
-            messages.error(request, f"Failed to send OTP. Error: {str(e)}")
-            return render(request, 'Apps/register.html')
-
-        # Save email and password in session for OTP verification
-        request.session['email'] = email
-        request.session['password'] = password
-
-        return redirect('/otp/')  # Redirect to the OTP page
-
-    return render(request, 'Apps/register.html')
-
-def otp_verify(request):
-    if request.method == "POST":
-        email = request.session.get('email')
-        password = request.session.get('password')
-        entered_otp = request.POST.get('otp')
-
-        if email and entered_otp:
-            correct_otp = otp_storage.get(email)
-            if str(correct_otp) == entered_otp:
-                # Hash the password before saving it to the database
-                hashed_password = make_password(password)
-
-                # Save the user to the MongoDB collection
-                user_collection.insert_one({
-                    'email': email,
-                    'password': hashed_password
-                })
-
-                # Clear OTP after successful registration
-                del otp_storage[email]
-                messages.success(request, "Registration successful!")
-                return redirect('/dashboard/')
-            else:
-                messages.error(request, "Invalid OTP. Please try again.")
-        else:
-            messages.error(request, "Session expired. Please register again.")
-            return redirect('/register/')
-
-    return render(request, 'Apps/otp.html')
 
 
 #index
@@ -162,6 +66,156 @@ def login(request):
     return render(request, 'Apps/login.html')
 
 
+# Connect to MongoDB
+client = MongoClient('localhost', 27017)  # Update if MongoDB is hosted elsewhere
+db = client['webofwonders']  # Replace with your database name
+user_collection = db['User']  # Replace with your collection name
+
+otp_storage = {}  # Temporary OTP storage
+
+def register(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Check if the email already exists in the database
+        existing_user = user_collection.find_one({"email": email})
+        if existing_user:
+            messages.error(request, "This email is already registered.")
+            return render(request, 'Apps/register.html')  # Redirect back to registration page
+
+        # Generate a 6-digit OTP
+        otp = random.randint(100000, 999999)
+        otp_storage[email] = otp  # Store OTP for verification
+
+        # HTML email content
+        email_subject = "WebOfWonders - Your OTP Code"
+        email_body = f"""
+        <!DOCTYPE html>
+        <html>
+        <body>
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; padding: 20px; background-color: #f9f9f9;">
+                <h2 style="text-align: center; color: #007bff;">WebOfWonders OTP Verification</h2>
+                <p>Dear User,</p>
+                <p>Thank you for registering with us. Please use the following OTP to verify your email address:</p>
+                <h3 style="text-align: center; color: #007bff; font-size: 28px;">{otp}</h3>
+                <p>This OTP is valid for 10 minutes. Do not share it with anyone.</p>
+                <p>Regards,</p>
+                <p>WebOfWonders Team</p>
+            </div>
+            <p style="color:'blue';">&copy; webofwonders 2025</p>
+        </body>
+        </html>
+        """
+
+        # Send email with OTP
+        try:
+            email_message = EmailMessage(
+                subject=email_subject,
+                body=email_body,
+                from_email=settings.EMAIL_HOST_USER,
+                to=[email],
+            )
+            email_message.content_subtype = "html"  # Use HTML content type
+            email_message.send(fail_silently=False)
+        except Exception as e:
+            messages.error(request, f"Failed to send OTP. Error: {str(e)}")
+            return render(request, 'Apps/register.html')
+
+        # Save email and password in session for OTP verification
+        request.session['email'] = email
+        request.session['password'] = password
+
+        return redirect('/otp/')  # Redirect to the OTP page
+
+    return render(request, 'Apps/register.html')
+
+
+
+def otp_verify(request):
+    if request.method == "POST":
+        email = request.session.get('email')
+        password = request.session.get('password')
+        entered_otp = (
+            request.POST.get('otp1', '') +
+            request.POST.get('otp2', '') +
+            request.POST.get('otp3', '') +
+            request.POST.get('otp4', '') +
+            request.POST.get('otp5', '') +
+            request.POST.get('otp6', '')
+)
+        if email and entered_otp:
+            correct_otp = otp_storage.get(email)
+            if str(correct_otp) == entered_otp:
+                # Hash the password before saving it to the database
+                hashed_password = make_password(password)
+
+                # Save the user to the MongoDB collection
+                user_collection.insert_one({
+                    'email': email,
+                    'password': hashed_password
+                })
+
+                # Clear OTP after successful registration
+                del otp_storage[email]
+                messages.success(request, "Registration successful!")
+                return redirect('/dashboard/')
+            else:
+                messages.error(request, "Invalid OTP. Please try again.")
+        else:
+            messages.error(request, "Session expired. Please register again.")
+            return redirect('/register/')
+
+    return render(request, 'Apps/otp.html')
+
+#resend 
+
+def resend_otp(request):
+    if request.method == "POST":
+        email = request.session.get("email", None)  # Retrieve the email from the session
+
+        if email:
+            # Generate a new OTP
+            otp = random.randint(100000, 999999)
+            otp_storage[email] = otp  # Store the new OTP in the temporary storage
+
+            # HTML email content
+            email_subject = "WebOfWonders - Your OTP Code"
+            email_body = f"""
+            <!DOCTYPE html>
+            <html>
+            <body>
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; padding: 20px; background-color: #f9f9f9;">
+                    <h2 style="text-align: center; color: #007bff;">WebOfWonders OTP Verification</h2>
+                    <p>Dear User,</p>
+                    <p>We have generated a new OTP for you. Please use the following OTP to verify your email address:</p>
+                    <h3 style="text-align: center; color: #007bff; font-size: 28px;">{otp}</h3>
+                    <p>This OTP is valid for 10 minutes. Do not share it with anyone.</p>
+                    <p>Regards,</p>
+                    <p>WebOfWonders Team</p>
+                </div>
+                <p style="color:'blue';">&copy; webofwonders 2025</p>
+            </body>
+            </html>
+            """
+
+            # Send email with the new OTP
+            try:
+                email_message = EmailMessage(
+                    subject=email_subject,
+                    body=email_body,
+                    from_email=settings.EMAIL_HOST_USER,
+                    to=[email],
+                )
+                email_message.content_subtype = "html"  # Use HTML content type
+                email_message.send(fail_silently=False)
+                messages.success(request, "A new OTP has been sent to your email.")
+            except Exception as e:
+                messages.error(request, f"Failed to resend OTP. Error: {str(e)}")
+        else:
+            messages.error(request, "No email associated with this session.")
+
+    return redirect('/otp/')  # Redirect to the OTP page after attempting to resend OTP
 
 
 def weather(request):

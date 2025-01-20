@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('register/',views.register,name='register'),
     path('otp/', views.otp_verify, name='otp_verify'),
+    path('resend-otp/', views.resend_otp, name='resend_otp'),  # Add this line
     path('dashboard/',views.dashboard,name='dashboard'),
     path('login/',views.login,name='login'),
     path('weather/', views.weather, name='weather'),

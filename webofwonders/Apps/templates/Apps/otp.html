@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -6,21 +7,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OTP Verification</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        .otp-Form {
+            width: 50%;
+            height: 100%;
+            margin-left: 300px;
+            margin-top: 100px;
+            background-color: rgb(255, 255, 255);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 30px;
+            gap: 20px;
+            position: relative;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.082);
+            border-radius: 15px;
+        }
+
+        .mainHeading {
+            font-size: 2rem;
+            color: rgb(15, 15, 15);
+            font-weight: 700;
+        }
+
+        .otpSubheading {
+            font-size: 1rem;
+            color: black;
+            line-height: 17px;
+            text-align: center;
+        }
+
+        .inputContainer {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .otp-input {
+            background-color: rgb(228, 228, 228);
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            border: none;
+            border-radius: 7px;
+            caret-color: rgb(127, 129, 255);
+            color: rgb(44, 44, 44);
+            outline: none;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .otp-input:focus,
+        .otp-input:valid {
+            background-color: rgba(127, 129, 255, 0.199);
+            transition-duration: .3s;
+        }
+
+        .verifyButton {
+            width: 50%;
+            margin-top: 40px;
+            height: 30px;
+            border: none;
+            background-color: rgb(127, 129, 255);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 10px;
+            transition-duration: .2s;
+        }
+
+        .verifyButton:hover {
+            background-color: rgb(144, 145, 255);
+            transition-duration: .2s;
+        }
+
+        .resendNote {
+            font-size: 1em;
+            color: black;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .resendBtn {
+            background-color: transparent;
+            border: none;
+            color: rgb(127, 129, 255);
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 700;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 1em;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Verify OTP</h1>
-    {% if messages %}
+    
+    <form class="otp-Form" method="POST">
+        {% csrf_token %}
+        <span class="mainHeading">Verify OTP</span>
+        <p class="otpSubheading">We have sent a verification code to your Email</p>
+        <div class="inputContainer">
+            <input required="required" maxlength="1" type="text" class="otp-input" name="otp1" oninput="this.nextElementSibling?.focus()">
+            <input required="required" maxlength="1" type="text" class="otp-input" name="otp2" oninput="this.nextElementSibling?.focus()">
+            <input required="required" maxlength="1" type="text" class="otp-input" name="otp3" oninput="this.nextElementSibling?.focus()">
+            <input required="required" maxlength="1" type="text" class="otp-input" name="otp4" oninput="this.nextElementSibling?.focus()">
+            <input required="required" maxlength="1" type="text" class="otp-input" name="otp5" oninput="this.nextElementSibling?.focus()">
+            <input required="required" maxlength="1" type="text" class="otp-input" name="otp6">
+        </div>
+        {% if messages %}
     <ul>
         {% for message in messages %}
-        <li style="color: red;">{{ message }}</li>
+        <li class="error-message">{{ message }}</li>
         {% endfor %}
     </ul>
     {% endif %}
-    <form method="POST">
-        {% csrf_token %}
-        <label for="otp">Enter OTP:</label>
-        <input type="text" name="otp" id="otp" required>
-        <button type="submit">Verify OTP</button>
+    <!-- {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="message {{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %} -->
+        <button class="verifyButton" type="submit">Verify</button>
     </form>
+    <!-- <p class="resendNote">Didn't receive the code? <button class="resendBtn" type="button">Resend Code</button></p> -->
+
+    <form method="POST" action="{% url 'resend_otp' %}">
+        {% csrf_token %}
+        <p class="resendNote">Didn't receive the code? 
+            <button class="resendBtn" type="submit">Resend Code</button>
+        </p>
+    </form>
+    <script>
+       
+</script>
+    
 </body>
 </html>
