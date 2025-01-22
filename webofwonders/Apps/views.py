@@ -13,6 +13,7 @@ from django.utils.crypto import get_random_string
 import os
 import yt_dlp
 import datetime
+from django.http import JsonResponse
 import pytz
 import pycountry 
 from django.contrib.auth.hashers import make_password, check_password
@@ -23,6 +24,9 @@ from django.contrib import messages
 from django.conf import settings
 import  random 
 from django.core.mail import EmailMessage
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.contrib.auth.models import User
 
 
 
@@ -31,39 +35,27 @@ from django.core.mail import EmailMessage
 
 
 #index
+#firebase 
+
+@csrf_exempt
+def firebase_auth(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        uid = data.get("uid")
+        email = data.get("email")
+        display_name = data.get("displayName")
+
+        if not email:
+            return JsonResponse({"success": False, "error": "Email is required"})
+
+        # Save user or update details
+        return JsonResponse({"success": True, "message": "User authenticated"})
 
 def index(request):
     return render(request, 'Apps/index.html')
 
 def dashboard(request):
     return render(request, 'Apps/dashboard.html')
-
-def login(request):
-    if request.method == "POST":
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-
-        # MongoDB setup
-        client = MongoClient('localhost', 27017)
-        db = client['webofwonders']
-        user_collection = db['User']
-
-        # Fetch user from MongoDB
-        user = user_collection.find_one({'email': email})
-
-        if user:
-            # Check if the provided password matches the hashed password
-            if check_password(password, user['password']):
-                # Set session or handle login success
-                request.session['user'] = email
-                messages.success(request, "Login successful!")
-                return redirect('/dashboard/')
-            else:
-                messages.error(request, "Invalid password.")
-        else:
-            messages.error(request, "No account found with this email.")
-
-    return render(request, 'Apps/login.html')
 
 
 # Connect to MongoDB
@@ -159,7 +151,7 @@ def otp_verify(request):
                 # Clear OTP after successful registration
                 del otp_storage[email]
                 messages.success(request, "Registration successful!")
-                return redirect('/dashboard/')
+                return redirect('/sucess/')
             else:
                 messages.error(request, "Invalid OTP. Please try again.")
         else:
@@ -218,6 +210,39 @@ def resend_otp(request):
     return redirect('/otp/')  # Redirect to the OTP page after attempting to resend OTP
 
 
+
+def login(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # MongoDB setup
+        client = MongoClient('localhost', 27017)
+        db = client['webofwonders']
+        user_collection = db['User']
+
+        # Fetch user from MongoDB
+        user = user_collection.find_one({'email': email})
+
+        if user:
+            # Check if the provided password matches the hashed password
+            if check_password(password, user['password']):
+                # Set session or handle login success
+                request.session['user'] = email
+                messages.success(request, "Login successful!")
+                return redirect('/dashboard/')
+            else:
+                messages.error(request, "Invalid password.")
+        else:
+            messages.error(request, "No account found with this email.")
+
+    return render(request, 'Apps/login.html')
+
+
+#sucess
+
+def sucess(request):
+    return render(request, 'Apps/sucess.html')
 def weather(request):
     if request.method == "POST":
         city = request.POST['city']

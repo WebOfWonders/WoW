@@ -8,9 +8,13 @@
     <title>OTP Verification</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <style>
+        body{
+    background: #020e33; /* Light background */
+
+        }
         .otp-Form {
             width: 50%;
-            height: 100%;
+            height: 400px;
             margin-left: 300px;
             margin-top: 100px;
             background-color: rgb(255, 255, 255);
@@ -26,6 +30,7 @@
         }
 
         .mainHeading {
+            margin-top: -70px;
             font-size: 2rem;
             color: rgb(15, 15, 15);
             font-weight: 700;
@@ -69,7 +74,7 @@
 
         .verifyButton {
             width: 50%;
-            margin-top: 40px;
+            margin-top: 10px;
             height: 30px;
             border: none;
             background-color: rgb(127, 129, 255);
@@ -86,9 +91,11 @@
         }
 
         .resendNote {
+            position: absolute;
             font-size: 1em;
             color: black;
-            width: 100%;
+            left: 45%;
+            top:70%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -109,13 +116,14 @@
             color: red;
             font-size: 1em;
             text-align: center;
-            margin-bottom: 10px;
+            margin-top: 10px;
+            margin-bottom: -20px;
         }
     </style>
 </head>
 <body>
     
-    <form class="otp-Form" method="POST">
+    <form class="otp-Form" method="POST" action="{% url 'otp_verify' %}">
         {% csrf_token %}
         <span class="mainHeading">Verify OTP</span>
         <p class="otpSubheading">We have sent a verification code to your Email</p>
@@ -129,7 +137,7 @@
         </div>
         {% if messages %}
     <ul>
-        {% for message in messages %}
+        {% for message in messages  %}
         <li class="error-message">{{ message }}</li>
         {% endfor %}
     </ul>
@@ -137,12 +145,13 @@
     <!-- {% if messages %}
     <ul class="messages">
         {% for message in messages %}
-            <li class="message {{ message.tags }}">{{ message }}</li>
+            <li style="color: green;" class="message {{ message.tags }}">{{ message }}</li>
         {% endfor %}
-    </ul>
-{% endif %} -->
+    </ul> -->
+<!-- {% endif %} -->
         <button class="verifyButton" type="submit">Verify</button>
     </form>
+
     <!-- <p class="resendNote">Didn't receive the code? <button class="resendBtn" type="button">Resend Code</button></p> -->
 
     <form method="POST" action="{% url 'resend_otp' %}">

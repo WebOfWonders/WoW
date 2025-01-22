@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Register </title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         body {
@@ -369,25 +370,45 @@
     color: white;
    font-size: 20px;
 }
+
+#reg-login-btn{
+    position: absolute;
+    top: 25%;
+    left: 65%;
+    padding: 15px 190px;
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+#reg-login-btn:hover{
+  transform: translateY(-2px);
+}
+#reg-login-btn:active{
+  transform: translateY(2px);
+}
 #google{
     position: absolute;
-    top: 30%;
+    top: 40%;
     left: 65%;
     padding: 15px 100px;
     font-size: 15px;
     font-weight: bold;
     border: none;
     border-radius: 20px;
+    cursor: pointer;
 }
 #github{
     position: absolute;
-    top: 50%;
+    top: 55%;
     left: 65%;
     padding: 15px 100px;
     font-size: 15px;
     font-weight: bold;
     border: none;
     border-radius: 20px;
+    cursor: pointer;
 }
 .google-btn{
   color: blue;
@@ -396,6 +417,11 @@
 .github-btn{
   color: purple;
   font-size:18px
+}
+
+.reg-login-btn{
+  margin-left: -100px;
+  font-size: 18px;
 }
 
     </style>
@@ -536,97 +562,108 @@
   </div>
 </div>
   <p id="or">OR</p>
-
+<!-- 
   <div class="reg-container-2">
-    <button id="google" onclick="window.location.href='/auth/google/';"><i class="fa-brands google-btn fa-google fa-beat"></i> &nbsp;&nbsp; Continue With Google</button><br>
-    <button id="github" onclick="window.location.href='/auth/github/';"><i class="fa-brands github-btn fa-github fa-beat"></i> &nbsp;&nbsp; Continue With Github</button>
-  </div>
+    <button id="reg-login-btn" onclick="window.location.href='/login/';"><i class="fa-solid reg-login-btn fa-user fa-beat"></i> &nbsp;&nbsp;&nbsp;&nbsp; Login</button><br>
+      <button id="google" onclick="signInWithGoogle()">
+      <i class="fa-brands google-btn fa-google fa-beat"></i>
+      &nbsp;&nbsp; Continue With Google
+  </button>
+  <br>
+  <button id="github" onclick="signInWithGitHub()">
+      <i class="fa-brands github-btn fa-github fa-beat"></i>
+      &nbsp;&nbsp; Continue With GitHub
+  </button>
+  </div> -->
+  <div class="reg-container-2">
+    <button id="google" onclick="signInWithGoogle()">
+        <i class="fa-brands google-btn fa-google fa-beat"></i>
+        &nbsp;&nbsp; Continue With Google
+    </button>
+    <br>
+    <button id="github" onclick="signInWithGitHub()">
+        <i class="fa-brands github-btn fa-github fa-beat"></i>
+        &nbsp;&nbsp; Continue With GitHub
+    </button>
+</div>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyA8UHV7DAOTP4kpUFNr6VRilmSK1jHzoRU",
+    authDomain: "webofwonders-76c70.firebaseapp.com",
+    projectId: "webofwonders-76c70",
+    storageBucket: "webofwonders-76c70.firebasestorage.app",
+    messagingSenderId: "355838267258",
+    appId: "1:355838267258:web:f5ab9ccdc936b42fa490c3",
+    measurementId: "G-MM5H2CGSX4"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+
+    const auth = firebase.auth();
+
+    console.log('Firebase App Initialized:', app);
+
+    // Sign in with Google
+    window.signInWithGoogle = function () {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider)
+            .then((result) => {
+                console.log("Google login successful:", result.user);
+                sendUserToServer(result.user);
+            })
+            .catch((error) => {
+                console.error("Google login failed:", error);
+            });
+    };
+
+    // Sign in with GitHub
+    window.signInWithGitHub = function () {
+        const provider = new firebase.auth.GithubAuthProvider();
+        auth.signInWithPopup(provider)
+            .then((result) => {
+                console.log("GitHub login successful:", result.user);
+                sendUserToServer(result.user);
+            })
+            .catch((error) => {
+                console.error("GitHub login failed:", error);
+            });
+    };
+
+    // Send user data to the server
+    function sendUserToServer(user) {
+        fetch('/firebase-auth/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                photoURL: user.photoURL
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("User successfully authenticated:", data);
+                window.location.href = '/';
+            } else {
+                console.error("Error saving user:", data.error);
+            }
+        });
+    }
+</script>
 </body>
 </html>
-
-
-<!-- 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .form-container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        .form-container h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .form-container .form-group {
-            margin-bottom: 15px;
-        }
-        .form-container .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        .form-container .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        .form-container .error {
-            color: red;
-            margin-bottom: 10px;
-        }
-        .form-container .submit {
-            width: 100%;
-            padding: 10px;
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .form-container .submit:hover {
-            background-color: #218838;
-        }
-    </style>
-</head>
-<body>
-    <div class="form-container">
-        <h2>Register</h2>
-        {% if error %}
-        <div class="error">{{ error }}</div>
-        {% endif %}
-        <form method="POST" action="">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-            </div>
-            <button class="submit" type="submit">Submit</button>
-        </form>
-    </div>
-</body>
-</html> -->
